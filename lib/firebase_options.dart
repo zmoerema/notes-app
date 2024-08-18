@@ -83,4 +83,5 @@ class DefaultFirebaseOptions {
     authDomain: 'zoemoeremans-notes.firebaseapp.com',
     storageBucket: 'zoemoeremans-notes.appspot.com',
   );
+
 }
