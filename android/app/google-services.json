@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "836998719172",
+    "project_id": "zoemoeremans-notes",
+    "storage_bucket": "zoemoeremans-notes.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:836998719172:android:042d42cbd4af6776eb8b91",
+        "android_client_info": {
+          "package_name": "com.zoemoeremans.notes_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB7nVW_Pub_7ULw4EJxu_sEV8MEMHguBLQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
