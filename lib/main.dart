@@ -1,7 +1,8 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:notes_app/firebase_options.dart';
+import 'package:notes_app/views/login_view.dart';
+import 'package:notes_app/views/register_view.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -19,6 +20,10 @@ class NotesApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
       home: const HomePage(),
+      routes: {
+        '/login/': (context) => const LoginView(),
+        'register/': (context) => const RegisterView(),
+      },
     );
   }
 }
@@ -40,13 +45,7 @@ class HomePage extends StatelessWidget {
           switch (snapshot.connectionState) {
             case ConnectionState.done:
               // if firebase is initialized successfully
-              final user = FirebaseAuth.instance.currentUser;
-              if (user?.emailVerified ?? false) {
-                print('You are a verified user.');
-              } else {
-                print('You need to verify your email first.');
-              }
-              return const Text('Done');
+              return const LoginView();
             default:
               // while firebase is still initializing, show a loading message
               return const Text('Loading...');
