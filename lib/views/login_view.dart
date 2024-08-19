@@ -66,12 +66,20 @@ class _LoginViewState extends State<LoginView> {
                       final email = _email.text;
                       final password = _password.text;
 
-                      await FirebaseAuth.instance.signInWithEmailAndPassword(
-                        email: email,
-                        password: password,
-                      );
-                      final user = FirebaseAuth.instance.currentUser!;
-                      print(user);
+                      try {
+                        await FirebaseAuth.instance.signInWithEmailAndPassword(
+                          email: email,
+                          password: password,
+                        );
+                        final user = FirebaseAuth.instance.currentUser!;
+                        print(user);
+                      } on FirebaseAuthException catch (e) {
+                        if (e.code == 'invalid-credential') {
+                          print('Error during login : Invalid email and/or password');
+                        } else {
+                          print('Error during login : ${e.code}');
+                        }
+                      }
                     },
                     child: const Text('Login'),
                   ),
