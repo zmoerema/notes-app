@@ -48,7 +48,7 @@ class HomePage extends StatelessWidget {
               return const LoginView();
             default:
               // while firebase is still initializing, show a loading message
-              return const Text('Loading...');
+              return const CircularProgressIndicator();
           }
         },
       ),
