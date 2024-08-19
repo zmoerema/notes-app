@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:notes_app/constants/routes.dart';
 import 'package:notes_app/firebase_options.dart';
 import 'dart:developer' as devtools show log;
 
@@ -74,7 +75,8 @@ class _RegisterViewState extends State<RegisterView> {
                         devtools.log(userCredential.toString());
                       } on FirebaseAuthException catch (e) {
                         if (e.code == 'weak-password') {
-                          devtools.log('error during registration : Weak password');
+                          devtools
+                              .log('error during registration : Weak password');
                         } else if (e.code == 'email-already-in-use') {
                           devtools.log(
                               'error during registration : Email is already in use');
@@ -91,7 +93,7 @@ class _RegisterViewState extends State<RegisterView> {
                   TextButton(
                     onPressed: () {
                       Navigator.of(context).pushNamedAndRemoveUntil(
-                        '/login/',
+                        loginRoute,
                         (route) => false,
                       );
                     },
