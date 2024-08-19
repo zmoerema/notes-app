@@ -6,6 +6,7 @@ import 'package:notes_app/views/login_view.dart';
 import 'package:notes_app/views/notes_view.dart';
 import 'package:notes_app/views/register_view.dart';
 import 'package:notes_app/views/verify_email_view.dart';
+import 'dart:developer' as devtools show log;
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -52,11 +53,14 @@ class HomePage extends StatelessWidget {
 
               if (user != null) {
                 if (user.emailVerified) {
+                  devtools.log('email already verified');
                   return const NotesView();
                 } else {
+                  devtools.log('email not verified');
                   return const VerifyEmailView();
                 }
               } else {
+                devtools.log('logged in');
                 return const LoginView();
               }
             default:
