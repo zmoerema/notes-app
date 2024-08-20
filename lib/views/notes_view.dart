@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:notes_app/enums/menu_action.dart';
+import 'package:notes_app/utilities/enums/menu_action.dart';
 import 'dart:developer' as devtools show log;
 
 class NotesView extends StatefulWidget {

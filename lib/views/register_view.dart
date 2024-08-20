@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:notes_app/constants/routes.dart';
-import 'package:notes_app/dialogs/error_dialog.dart';
+import 'package:notes_app/utilities/constants/routes.dart';
+import 'package:notes_app/utilities/dialogs/error_dialog.dart';
 import 'package:notes_app/firebase_options.dart';
 import 'dart:developer' as devtools show log;
 
