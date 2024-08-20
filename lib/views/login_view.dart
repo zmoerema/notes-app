@@ -4,7 +4,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:notes_app/utilities/constants/routes.dart';
 import 'package:notes_app/utilities/dialogs/error_dialog.dart';
 import 'package:notes_app/firebase_options.dart';
-import 'dart:developer' as devtools show log;
 
 class LoginView extends StatefulWidget {
   const LoginView({super.key});
@@ -75,9 +74,19 @@ class _LoginViewState extends State<LoginView> {
                           password: password,
                         );
                         final user = FirebaseAuth.instance.currentUser!;
-                        devtools.log(user.toString());
-                        Navigator.of(context).pushNamedAndRemoveUntil(
-                            notesRoute, (route) => false);
+                        if (user.emailVerified) {
+                          // user's email is verified
+                          Navigator.of(context).pushNamedAndRemoveUntil(
+                            notesRoute,
+                            (route) => false,
+                          );
+                        } else {
+                          // user's email is NOT verified
+                          Navigator.of(context).pushNamedAndRemoveUntil(
+                            verifyEmailRoute,
+                            (route) => false,
+                          );
+                        }
                       } on FirebaseAuthException catch (e) {
                         if (e.code == 'invalid-email') {
                           await showErrorDialog(context, 'Invalid email');
