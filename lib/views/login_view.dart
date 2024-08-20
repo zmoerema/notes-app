@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:notes_app/constants/routes.dart';
+import 'package:notes_app/dialogs/error_dialog.dart';
 import 'package:notes_app/firebase_options.dart';
 import 'dart:developer' as devtools show log;
 
@@ -78,11 +79,12 @@ class _LoginViewState extends State<LoginView> {
                         Navigator.of(context).pushNamedAndRemoveUntil(
                             notesRoute, (route) => false);
                       } on FirebaseAuthException catch (e) {
-                        if (e.code == 'invalid-credential') {
-                          devtools.log(
-                              'Error during login : Invalid email and/or password');
+                        if (e.code == 'invalid-email') {
+                          await showErrorDialog(context, 'Invalid email');
+                        } else if (e.code == 'invalid-credential') {
+                          await showErrorDialog(context, 'Invalid credential');
                         } else {
-                          devtools.log('Error during login : ${e.code}');
+                          await showErrorDialog(context, e.code.toString());
                         }
                       }
                     },
@@ -108,3 +110,4 @@ class _LoginViewState extends State<LoginView> {
     );
   }
 }
+
