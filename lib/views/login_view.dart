@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:notes_app/services/auth/auth_exceptions.dart';
 import 'package:notes_app/utilities/constants/routes.dart';
-import 'package:notes_app/utilities/dialogs/error_dialog.dart';
 import 'package:notes_app/firebase_options.dart';
 
 class LoginView extends StatefulWidget {
@@ -89,11 +89,11 @@ class _LoginViewState extends State<LoginView> {
                         }
                       } on FirebaseAuthException catch (e) {
                         if (e.code == 'invalid-email') {
-                          await showErrorDialog(context, 'Invalid email');
+                          throw InvalidEmailAuthException();
                         } else if (e.code == 'invalid-credential') {
-                          await showErrorDialog(context, 'Invalid credential');
+                          throw InvalidCredentialAuthException();
                         } else {
-                          await showErrorDialog(context, e.code.toString());
+                          throw GenericAuthException();
                         }
                       }
                     },
@@ -119,4 +119,3 @@ class _LoginViewState extends State<LoginView> {
     );
   }
 }
-
