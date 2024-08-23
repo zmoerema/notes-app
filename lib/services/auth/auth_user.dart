@@ -1,10 +1,13 @@
 import 'package:firebase_auth/firebase_auth.dart' show User;
 import 'package:flutter/foundation.dart';
 
-@immutable
+@immutable // a class is immutable if all of the instance fields of the class, whether defined directly or inherited, are final
+// abstraction of the Firebase user to the outside world (UI)
+// UI -> AuthService -> AuthUser -> Firebase user
 class AuthUser {
   final bool isEmailVerified;
   const AuthUser(this.isEmailVerified);
 
-  factory AuthUser.fromFirebase(User user) => AuthUser(user.emailVerified);
+  factory AuthUser.firebase(User user) => AuthUser(user
+      .emailVerified); // factory constructors are commonly used to enforce the singleton pattern, ensuring that only one instance of a class exists throughout the application
 }

@@ -7,6 +7,8 @@ import 'package:notes_app/services/auth/auth_exceptions.dart';
 import 'package:firebase_auth/firebase_auth.dart'
     show FirebaseAuth, FirebaseAuthException;
 
+// concrete implementation of the functionalities specified in the AuthProvider abstract class
+// for Firebase authentication provider
 class FirebaseAuthProvider implements AuthProvider {
   @override
   Future<void> initialize() async {
@@ -14,12 +16,12 @@ class FirebaseAuthProvider implements AuthProvider {
       options: DefaultFirebaseOptions.currentPlatform,
     );
   }
-  
+
   @override
   AuthUser? get currentUser {
     final user = FirebaseAuth.instance.currentUser;
     if (user != null) {
-      return AuthUser.fromFirebase(user);
+      return AuthUser.firebase(user);
     } else {
       return null;
     }
@@ -90,8 +92,7 @@ class FirebaseAuthProvider implements AuthProvider {
       } else {
         throw GenericAuthException();
       }
-    }
-    catch (_) {
+    } catch (_) {
       throw GenericAuthException();
     }
   }
