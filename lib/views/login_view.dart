@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:notes_app/services/auth/auth_exceptions.dart';
+import 'package:notes_app/services/auth/auth_service.dart';
 import 'package:notes_app/utilities/constants/routes.dart';
-import 'package:notes_app/firebase_options.dart';
+import 'package:notes_app/utilities/dialogs/error_dialog.dart';
 
 class LoginView extends StatefulWidget {
   const LoginView({super.key});
@@ -35,9 +34,7 @@ class _LoginViewState extends State<LoginView> {
     return Scaffold(
       appBar: AppBar(title: const Text('Login')),
       body: FutureBuilder(
-        future: Firebase.initializeApp(
-          options: DefaultFirebaseOptions.currentPlatform,
-        ),
+        future: AuthService.firebase().initialize(),
         builder: (context, snapshot) {
           switch (snapshot.connectionState) {
             case ConnectionState.done:
@@ -69,12 +66,12 @@ class _LoginViewState extends State<LoginView> {
                       final password = _password.text;
 
                       try {
-                        await FirebaseAuth.instance.signInWithEmailAndPassword(
+                        await AuthService.firebase().logIn(
                           email: email,
                           password: password,
                         );
-                        final user = FirebaseAuth.instance.currentUser!;
-                        if (user.emailVerified) {
+                        final user = AuthService.firebase().currentUser!;
+                        if (user.isEmailVerified) {
                           // user's email is verified
                           Navigator.of(context).pushNamedAndRemoveUntil(
                             notesRoute,
@@ -87,14 +84,12 @@ class _LoginViewState extends State<LoginView> {
                             (route) => false,
                           );
                         }
-                      } on FirebaseAuthException catch (e) {
-                        if (e.code == 'invalid-email') {
-                          throw InvalidEmailAuthException();
-                        } else if (e.code == 'invalid-credential') {
-                          throw InvalidCredentialAuthException();
-                        } else {
-                          throw GenericAuthException();
-                        }
+                      } on InvalidEmailAuthException {
+                        await showErrorDialog(context, 'Invalid email');
+                      } on InvalidCredentialAuthException {
+                        await showErrorDialog(context, 'Invalid credentials');
+                      } on GenericAuthException {
+                        await showErrorDialog(context, 'Failed to login');
                       }
                     },
                     child: const Text('Login'),
