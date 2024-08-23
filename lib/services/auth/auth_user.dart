@@ -6,8 +6,8 @@ import 'package:flutter/foundation.dart';
 // UI -> AuthService -> AuthUser -> Firebase user
 class AuthUser {
   final bool isEmailVerified;
-  const AuthUser(this.isEmailVerified);
+  const AuthUser({required this.isEmailVerified});
 
-  factory AuthUser.firebase(User user) => AuthUser(user
-      .emailVerified); // factory constructors are commonly used to enforce the singleton pattern, ensuring that only one instance of a class exists throughout the application
+  factory AuthUser.firebase(User user) =>
+    AuthUser(isEmailVerified: user.emailVerified); // factory constructors are commonly used to enforce the singleton pattern, ensuring that only one instance of a class exists throughout the application
 }
