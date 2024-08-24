@@ -86,8 +86,10 @@ class _LoginViewState extends State<LoginView> {
                         }
                       } on InvalidEmailAuthException {
                         await showErrorDialog(context, 'Invalid email');
-                      } on InvalidCredentialAuthException {
-                        await showErrorDialog(context, 'Invalid credentials');
+                      } on UserNotFoundAuthException {
+                        await showErrorDialog(context, 'User not found');
+                      } on WrongPasswordAuthException {
+                        await showErrorDialog(context, 'Wrong password');
                       } on GenericAuthException {
                         await showErrorDialog(context, 'Failed to login');
                       }

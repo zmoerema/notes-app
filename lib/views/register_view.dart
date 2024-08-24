@@ -70,12 +70,12 @@ class _RegisterViewState extends State<RegisterView> {
                             .createUser(email: email, password: password);
                         Navigator.of(context).pushNamedAndRemoveUntil(
                             verifyEmailRoute, (route) => false);
+                      } on InvalidEmailAuthException {
+                        await showErrorDialog(context, 'Invalid email');
                       } on WeakPasswordAuthException {
                         await showErrorDialog(context, 'Weak password');
                       } on EmailAlreadyInUseAuthException {
                         await showErrorDialog(context, 'Email is already in use');
-                      } on InvalidEmailAuthException {
-                        await showErrorDialog(context, 'Invalid email');
                       } on GenericAuthException {
                         await showErrorDialog(context, 'Failed to register');
                       }
