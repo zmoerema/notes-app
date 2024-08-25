@@ -34,6 +34,11 @@ class _NotesViewState extends State<NotesView> {
       appBar: AppBar(
         title: const Text('Your Notes'),
         actions: [
+          IconButton(
+              onPressed: () {
+                Navigator.of(context).pushNamed(NEW_NOTE_ROUTE);
+              },
+              icon: const Icon(Icons.add)),
           PopupMenuButton<MenuAction>(onSelected: (value) async {
             if (value case MenuAction.logout) {
               final shouldLogout = await showLogOutDialog(context);
