@@ -26,13 +26,15 @@ class _NewNoteViewState extends State<NewNoteView> {
     // listens to changes in the text controller
     // updates the note in the database
     if (_note == null) return;
-    
+
     await _db.updateNote(note: _note!, text: _textController.text);
   }
 
   void _setUpTextControllerListener() async {
-    _textController.removeListener(_textControllerListener); // to avoid adding multiple listeners, which could lead to unwanted behavior
-    _textController.addListener(_textControllerListener); // add _textControllerListener as the listener to the _textController
+    _textController.removeListener(
+        _textControllerListener); // to avoid adding multiple listeners, which could lead to unwanted behavior
+    _textController.addListener(
+        _textControllerListener); // add _textControllerListener as the listener to the _textController
   }
 
   void _deleteNoteIfTextIsEmpty() {
@@ -68,10 +70,27 @@ class _NewNoteViewState extends State<NewNoteView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('New Note'),
-      ),
-      body: const Text('Write your note here.'),
-    );
+        appBar: AppBar(
+          title: const Text('New Note'),
+        ),
+        body: FutureBuilder(
+            future: createNewNote(),
+            builder: (context, snapshot) {
+              switch (snapshot.connectionState) {
+                case ConnectionState.done:
+                  _note = snapshot.data as DatabaseNote;
+                  _setUpTextControllerListener();
+                  return TextField(
+                    controller: _textController,
+                    keyboardType: TextInputType.multiline,
+                    maxLines: null,
+                    decoration: const InputDecoration(
+                      hintText: 'Write your note here...',
+                    ),
+                  );
+                default:
+                  return const CircularProgressIndicator();
+              }
+            }));
   }
 }
