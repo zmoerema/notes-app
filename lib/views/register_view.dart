@@ -69,13 +69,14 @@ class _RegisterViewState extends State<RegisterView> {
                         await AuthService.firebase()
                             .createUser(email: email, password: password);
                         Navigator.of(context).pushNamedAndRemoveUntil(
-                            verifyEmailRoute, (route) => false);
+                            VERIFY_EMAIL_ROUTE, (route) => false);
                       } on InvalidEmailAuthException {
                         await showErrorDialog(context, 'Invalid email');
                       } on WeakPasswordAuthException {
                         await showErrorDialog(context, 'Weak password');
                       } on EmailAlreadyInUseAuthException {
-                        await showErrorDialog(context, 'Email is already in use');
+                        await showErrorDialog(
+                            context, 'Email is already in use');
                       } on GenericAuthException {
                         await showErrorDialog(context, 'Failed to register');
                       }
@@ -85,7 +86,7 @@ class _RegisterViewState extends State<RegisterView> {
                   TextButton(
                     onPressed: () {
                       Navigator.of(context).pushNamedAndRemoveUntil(
-                        loginRoute,
+                        LOGIN_ROUTE,
                         (route) => false,
                       );
                     },

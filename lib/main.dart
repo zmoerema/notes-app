@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:notes_app/services/auth/auth_service.dart';
 import 'package:notes_app/utilities/constants/routes.dart';
 import 'package:notes_app/views/login_view.dart';
-import 'package:notes_app/views/notes_view.dart';
+import 'package:notes_app/views/notes/new_note_view.dart';
+import 'package:notes_app/views/notes/notes_view.dart';
 import 'package:notes_app/views/register_view.dart';
 import 'package:notes_app/views/verify_email_view.dart';
 import 'dart:developer' as devtools show log;
@@ -24,10 +25,11 @@ class NotesApp extends StatelessWidget {
       ),
       home: const HomePage(),
       routes: {
-        loginRoute: (context) => const LoginView(),
-        registerRoute: (context) => const RegisterView(),
-        notesRoute: (context) => const NotesView(),
-        verifyEmailRoute: (context) => const VerifyEmailView(),
+        LOGIN_ROUTE: (context) => const LoginView(),
+        REGISTER_ROUTE: (context) => const RegisterView(),
+        NOTES_ROUTE: (context) => const NotesView(),
+        VERIFY_EMAIL_ROUTE: (context) => const VerifyEmailView(),
+        NEW_NOTE_ROUTE: (context) => const NewNoteView(),
       },
     );
   }

@@ -74,13 +74,13 @@ class _LoginViewState extends State<LoginView> {
                         if (user.isEmailVerified) {
                           // user's email is verified
                           Navigator.of(context).pushNamedAndRemoveUntil(
-                            notesRoute,
+                            NOTES_ROUTE,
                             (route) => false,
                           );
                         } else {
                           // user's email is NOT verified
                           Navigator.of(context).pushNamedAndRemoveUntil(
-                            verifyEmailRoute,
+                            VERIFY_EMAIL_ROUTE,
                             (route) => false,
                           );
                         }
@@ -99,7 +99,7 @@ class _LoginViewState extends State<LoginView> {
                   TextButton(
                     onPressed: () {
                       Navigator.of(context).pushNamedAndRemoveUntil(
-                        registerRoute,
+                        REGISTER_ROUTE,
                         (route) => false,
                       );
                     },
