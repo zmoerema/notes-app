@@ -8,8 +8,8 @@ import 'package:sqflite/sqflite.dart';
 import 'dart:async';
 
 class DbService {
-    Database? _db;
-    
+  Database? _db;
+
   // Singleton instance of the DbService
   static final DbService _instance = DbService._internal();
 
@@ -23,7 +23,8 @@ class DbService {
   List<DatabaseNote> _notes = [];
 
   // Stream controller to broadcast the list of notes to listeners
-  final _notesStreamController = StreamController<List<DatabaseNote>>.broadcast();
+  final _notesStreamController =
+      StreamController<List<DatabaseNote>>.broadcast();
 
   // Getter to expose the stream of all notes
   Stream<List<DatabaseNote>> get allNotes => _notesStreamController.stream;
@@ -94,7 +95,7 @@ class DbService {
     );
   }
 
-  Future<DatabaseUser?> _getUserByEmail(String email) async {
+  Future<DatabaseUser?> _getUserByEmail({required String email}) async {
     final results = await _queryTable(
       userTable,
       where: 'email = ?',
@@ -107,13 +108,13 @@ class DbService {
 
   Future<DatabaseUser> getUser({required String email}) async {
     await _ensureDbIsOpen();
-    final user = await _getUserByEmail(email);
+    final user = await _getUserByEmail(email: email);
     return user ?? (throw CouldNotFindUserException());
   }
 
   Future<DatabaseUser> createUser({required String email}) async {
     await _ensureDbIsOpen();
-    final existingUser = await _getUserByEmail(email);
+    final existingUser = await _getUserByEmail(email: email);
     if (existingUser != null) throw UserAlreadyExistsException();
 
     final db = _getDatabaseOrThrow();
@@ -159,8 +160,8 @@ class DbService {
     _addNoteToCache(note: note);
   }
 
-  void _removeNoteFromCache({required int id}) {
-    _notes.removeWhere((note) => note.id == id);
+  void _removeNoteFromCache({required int noteId}) {
+    _notes.removeWhere((note) => note.id == noteId);
     _notesStreamController.add(_notes);
   }
 
@@ -169,12 +170,12 @@ class DbService {
     _notesStreamController.add(_notes);
   }
 
-  Future<DatabaseNote> getNote({required int id}) async {
+  Future<DatabaseNote> getNote({required int noteId}) async {
     await _ensureDbIsOpen();
     final results = await _queryTable(
       noteTable,
       where: 'id = ?',
-      whereArgs: [id],
+      whereArgs: [noteId],
       limit: 1,
     );
 
@@ -182,9 +183,8 @@ class DbService {
       throw CouldNotFindNoteException();
     } else {
       final note = DatabaseNote.fromRow(results.first);
-      _updateNoteInCache(
-          note:
-              note); // we need to update the cache bc the copy of the note in the cache may not be up-to-date
+      _updateNoteInCache(note:
+          note); // we need to update the cache bc the copy of the note in the cache may not be up-to-date
       return note;
     }
   }
@@ -224,7 +224,7 @@ class DbService {
     required String text,
   }) async {
     await _ensureDbIsOpen();
-    await getNote(id: note.id);
+    await getNote(noteId: note.id);
 
     final db = _getDatabaseOrThrow();
     final updatesCount = await db.update(
@@ -240,25 +240,25 @@ class DbService {
     if (updatesCount == 0) {
       throw CouldNotUpdateNoteException();
     } else {
-      final updatedNote = await getNote(id: note.id);
+      final updatedNote = await getNote(noteId: note.id);
       _updateNoteInCache(note: updatedNote);
       return updatedNote;
     }
   }
 
-  Future<void> deleteNote({required int id}) async {
+  Future<void> deleteNote({required int noteId}) async {
     await _ensureDbIsOpen();
     final db = _getDatabaseOrThrow();
     final deletedCount = await db.delete(
       noteTable,
       where: 'id = ?',
-      whereArgs: [id],
+      whereArgs: [noteId],
     );
 
     if (deletedCount == 0) {
       throw CouldNotDeleteNoteException();
     } else {
-      _removeNoteFromCache(id: id);
+      _removeNoteFromCache(noteId: noteId);
     }
   }
 
