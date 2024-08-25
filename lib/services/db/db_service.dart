@@ -8,11 +8,25 @@ import 'package:sqflite/sqflite.dart';
 import 'dart:async';
 
 class DbService {
-  Database? _db;
+    Database? _db;
+    
+  // Singleton instance of the DbService
+  static final DbService _instance = DbService._internal();
 
-  List<DatabaseNote> _notes = []; // cache notes for quicker access
-  final _notesStreamController =
-      StreamController<List<DatabaseNote>>.broadcast();
+  // Private constructor for the singleton pattern
+  DbService._internal();
+
+  // Factory constructor to return the singleton instance
+  factory DbService() => _instance;
+
+  // Cached list of notes for quicker access
+  List<DatabaseNote> _notes = [];
+
+  // Stream controller to broadcast the list of notes to listeners
+  final _notesStreamController = StreamController<List<DatabaseNote>>.broadcast();
+
+  // Getter to expose the stream of all notes
+  Stream<List<DatabaseNote>> get allNotes => _notesStreamController.stream;
 
   Future<void> _cacheNotes() async {
     final allNotes = await getAllNotes();
