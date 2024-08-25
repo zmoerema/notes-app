@@ -54,7 +54,27 @@ class _NotesViewState extends State<NotesView> {
           }),
         ],
       ),
-      body: const Text('Hello world'),
+      body: FutureBuilder(
+          future: _dbService.getOrCreateUser(email: userEmail),
+          builder: (context, snapshot) {
+            switch (snapshot.connectionState) {
+              case ConnectionState.done:
+                return StreamBuilder(
+                    stream: _dbService.allNotes,
+                    builder: (context, snapshot) {
+                      switch (snapshot.connectionState) {
+                        case ConnectionState.done:
+                          return const Text('done');
+                        case ConnectionState.waiting:
+                          return const Text('loading...');
+                        default:
+                          return const CircularProgressIndicator();
+                      }
+                    });
+              default:
+                return const CircularProgressIndicator();
+            }
+          }),
     );
   }
 }
