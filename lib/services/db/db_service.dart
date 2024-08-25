@@ -20,6 +20,14 @@ class DbService {
     _notesStreamController.add(_notes);
   }
 
+  Future<void> _ensureDbIsOpen() async {
+    try {
+      await open();
+    } on DatabaseAlreadyOpenException {
+      // empty
+    }
+  }
+
   Database _getDatabaseOrThrow() {
     if (_db == null) throw DatabaseNotOpenException();
     return _db!;
@@ -84,11 +92,13 @@ class DbService {
   }
 
   Future<DatabaseUser> getUser({required String email}) async {
+    await _ensureDbIsOpen();
     final user = await _getUserByEmail(email);
     return user ?? (throw CouldNotFindUserException());
   }
 
   Future<DatabaseUser> createUser({required String email}) async {
+    await _ensureDbIsOpen();
     final existingUser = await _getUserByEmail(email);
     if (existingUser != null) throw UserAlreadyExistsException();
 
@@ -101,6 +111,7 @@ class DbService {
   }
 
   Future<void> deleteUser({required String email}) async {
+    await _ensureDbIsOpen();
     final db = _getDatabaseOrThrow();
     final deletedCount = await db.delete(
       userTable,
@@ -111,7 +122,7 @@ class DbService {
     if (deletedCount == 0) throw CouldNotDeleteUserException();
   }
 
-    Future<DatabaseUser> getOrCreateUser({required String email}) async {
+  Future<DatabaseUser> getOrCreateUser({required String email}) async {
     try {
       return await getUser(email: email);
     } on CouldNotFindUserException {
@@ -145,6 +156,7 @@ class DbService {
   }
 
   Future<DatabaseNote> getNote({required int id}) async {
+    await _ensureDbIsOpen();
     final results = await _queryTable(
       noteTable,
       where: 'id = ?',
@@ -164,11 +176,13 @@ class DbService {
   }
 
   Future<Iterable<DatabaseNote>> getAllNotes() async {
+    await _ensureDbIsOpen();
     final results = await _queryTable(noteTable, where: '1 = 1', whereArgs: []);
     return results.map(DatabaseNote.fromRow);
   }
 
   Future<DatabaseNote> createNote({required DatabaseUser owner}) async {
+    await _ensureDbIsOpen();
     final dbUser = await getUser(email: owner.email);
     if (dbUser != owner) throw CouldNotFindUserException();
 
@@ -195,6 +209,7 @@ class DbService {
     required DatabaseNote note,
     required String text,
   }) async {
+    await _ensureDbIsOpen();
     await getNote(id: note.id);
 
     final db = _getDatabaseOrThrow();
@@ -218,6 +233,7 @@ class DbService {
   }
 
   Future<void> deleteNote({required int id}) async {
+    await _ensureDbIsOpen();
     final db = _getDatabaseOrThrow();
     final deletedCount = await db.delete(
       noteTable,
@@ -233,6 +249,7 @@ class DbService {
   }
 
   Future<int> deleteAllNotes() async {
+    await _ensureDbIsOpen();
     final db = _getDatabaseOrThrow();
     final numberOfDeletions = await db.delete(noteTable);
 
