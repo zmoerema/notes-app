@@ -111,6 +111,19 @@ class DbService {
     if (deletedCount == 0) throw CouldNotDeleteUserException();
   }
 
+    Future<DatabaseUser> getOrCreateUser({required String email}) async {
+    try {
+      return await getUser(email: email);
+    } on CouldNotFindUserException {
+      return await createUser(email: email);
+    } catch (e) {
+      // if an unexpected error occurs, instead of just catching it and doing nothing,
+      // rethrow makes sure the error doesn't get ignored and can be handled somewhere else in the program
+      // easier to debug
+      rethrow;
+    }
+  }
+
   void _addNoteToCache({required DatabaseNote note}) {
     _notes.add(note);
     _notesStreamController.add(_notes);
