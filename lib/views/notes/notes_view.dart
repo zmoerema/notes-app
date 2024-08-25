@@ -71,7 +71,8 @@ class _NotesViewState extends State<NotesView> {
                         case ConnectionState.done:
                           return const Text('done');
                         case ConnectionState.waiting:
-                          return const Text('loading...');
+                        case ConnectionState.active:
+                          return const Text('Waiting for all notes...');
                         default:
                           return const CircularProgressIndicator();
                       }
